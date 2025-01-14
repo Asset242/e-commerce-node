@@ -11,6 +11,8 @@ RUN npm install
 # Copy the entire project
 COPY . .
 
+# Generate Prisma Client (Fixes the issue)
+RUN npx prisma generate
 
 # Build the TypeScript project
 RUN npx tsc
