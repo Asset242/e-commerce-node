@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "typeRoots": ["./src/types", "node_modules/@types"],
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

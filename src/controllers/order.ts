@@ -1,13 +1,12 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../types/authenticated-request";
 import { prismaClient } from "..";
-import { isNull } from "util";
 import { NotFoundException } from "../exceptions/not-found-exception";
 import { ErrorCodes } from "../exceptions/root";
 
 export const createOrder = async (req:AuthenticatedRequest, res:Response) => {
 
-  return await prismaClient.$transaction(async (tx) => {
+  return await prismaClient.$transaction(async (tx: any) => {
     const cart = await tx.cartItem.findMany({
       where: {userId: req.user.id},
       include: {product: true}
@@ -16,7 +15,7 @@ export const createOrder = async (req:AuthenticatedRequest, res:Response) => {
       return res.status(400).json({message: "Cart is empty"})
     }
 
-    const price = cart.reduce((prev, current) => {
+    const price = cart.reduce((prev:any, current:any) => {
       return prev + (current.quantity * Number(current.product.price))
     }, 0)
     // return res.status(200).json(price)
@@ -29,7 +28,7 @@ export const createOrder = async (req:AuthenticatedRequest, res:Response) => {
         address: address? address.formattedAddress : '',
         status: "CREATION",
         products: {
-          create: cart.map((item) => {
+          create: cart.map((item:any) => {
             return {
               productId: item.productId,
               quantity: item.quantity

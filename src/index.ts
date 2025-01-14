@@ -21,7 +21,7 @@ export const prismaClient = new PrismaClient({
                     country: true,
                     pincode: true
                 },
-                compute: (addr) => {
+                compute: (addr: any) => {
                     return `${addr.lineOne}, ${addr.lineTwo}, ${addr.city}, ${addr.country}, ${addr.pincode}`
                 }
             }
