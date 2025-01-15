@@ -1,5 +1,5 @@
 # Use Node.js 22 as the base image
-FROM node:22
+FROM node:22-alpine
 
 # Set working directory for this specific app
 WORKDIR /usr/src/app
