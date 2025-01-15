@@ -7,6 +7,7 @@ const app:Express = express();
 
 app.use(express.json())
 app.use('/api', rootRoutes);
+console.log(process.env.DATABASE_URL)
 
 export const prismaClient = new PrismaClient({
     log: ['query']
