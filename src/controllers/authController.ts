@@ -8,6 +8,7 @@ import { ErrorCodes } from "../exceptions/root";
 import UnproccessableRequest from "../exceptions/validationException";
 import { signupSchema } from "../schema/users";
 import { NotFoundException } from "../exceptions/not-found-exception";
+import { json } from "stream/consumers";
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -30,6 +31,7 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
     signupSchema.parse(req.body)
     const { email, password, name } = req.body;
 
@@ -47,6 +49,15 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         }
     })
     res.json(newUser);
+    } catch (err: any) {
+        // next(new UnproccessableRequest(err, "Invalid Signup Details", ErrorCodes.UNPROCESSABLE_ENTITY))
+        res.status(400).json({
+            error: err.message,
+            message: "Error occurred",
+            statusCode: 422
+        })
+    }
+    
 }
 
 export const getUser = (req:Request, res:Response, next:NextFunction) => {

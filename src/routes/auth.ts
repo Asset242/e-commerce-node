@@ -7,7 +7,7 @@ import { AuthMiddleware } from "../middlewares/auth";
 const authRoutes:Router = Router()
 
 authRoutes.post('/login', tryAndCatch(login))
-authRoutes.post('/signup', tryAndCatch(signup))
+authRoutes.post('/signup', signup)
 authRoutes.get('/user', [AuthMiddleware], getUser)
 
 
