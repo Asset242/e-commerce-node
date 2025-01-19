@@ -1,6 +1,6 @@
 import { NextFunction, request, Request, Response } from "express"
 import { prismaClient } from "..";
-// import { hashSync, compareSync } from "bcrypt";
+import { hashSync, compareSync } from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secret";
 import { BadRequestsException } from "../exceptions/bad-requests";
@@ -46,8 +46,8 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         data: {
             email,
             name,
-            // password: hashSync(password, 10),
-            password,
+            password: hashSync(password, 10),
+            // password,
         }
     })
     res.json(newUser);

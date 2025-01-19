@@ -1,6 +1,8 @@
 # Use Node.js 22 as the base image
 FROM node:20-alpine3.20
 
+RUN apk add --no-cache python3 make g++ libc6-compat
+
 # Set working directory for this specific app
 WORKDIR /usr/src/app
 
