@@ -1,6 +1,6 @@
 import { NextFunction, request, Request, Response } from "express"
 import { prismaClient } from "..";
-import { hashSync, compareSync } from "bcrypt";
+// import { hashSync, compareSync } from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secret";
 import { BadRequestsException } from "../exceptions/bad-requests";
@@ -10,6 +10,9 @@ import { signupSchema } from "../schema/users";
 import { NotFoundException } from "../exceptions/not-found-exception";
 import { json } from "stream/consumers";
 import { getUserById } from "./user";
+// import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
+import { argon2id, hash, verify } from "argon2";
+
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -20,9 +23,9 @@ export const login = async (req: Request, res: Response) => {
         throw new NotFoundException('Invalid Login Details', ErrorCodes.RESOURCE_NOT_FOUND)
     }
 
-    // if (!compareSync(password, user.password)) {
-    //     throw new BadRequestsException("Invalid Login Details", ErrorCodes.USER_ALREADY_EXIST)
-    // }
+    if (!await verify(user.password, password )) {
+        throw new BadRequestsException("Invalid Login Details", ErrorCodes.USER_ALREADY_EXIST)
+    }
 
     const token = jwt.sign({
         'userId': user.id
@@ -41,12 +44,13 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     if (user) {
         throw new BadRequestsException("User already exist", ErrorCodes.USER_ALREADY_EXIST)
     }
+    const hashedPassword = await hash(password, {type: argon2id});
 
     const newUser = await prismaClient.user.create({
         data: {
             email,
             name,
-            password: hashSync(password, 10),
+            password: hashedPassword
             // password,
         }
     })
